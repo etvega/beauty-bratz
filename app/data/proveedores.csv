@@ -1,0 +1,6 @@
+id,nombre,telefono,email,activo
+1,Distribuidora Glamour,300123,glam@mail.com,True
+2,Laboratorios BioSkin,310987,bio@mail.com,True
+3,Importaciones BeautyWorld,320111,world@mail.com,True
+4,Cosméticos Estelar,300555,estelar@mail.com,True
+5,Herramientas Belleza Pro,315444,pro@mail.com,True

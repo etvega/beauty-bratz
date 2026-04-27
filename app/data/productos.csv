@@ -1,2 +1,11 @@
-id,nombre,precio,cantidad,categoria_id,proveedor_id
-1,pestañas,30000.0,5,1,1
+id,nombre,precio,cantidad,categoria_id,proveedor_id,activo
+1,Labial Mate Bratz Rojo,25.5,50,1,1,True
+2,Serum Facial Vitamina C,45.0,20,2,2,True
+3,Esponja Beauty Blender,12.0,100,3,3,True
+4,Base Full Coverage,35.9,15,1,1,True
+5,Paleta 'Pink Dreams',55.0,10,1,4,True
+6,Crema Ácido Hialurónico,38.0,25,2,2,True
+7,Kit de Brochas Pro,65.0,8,3,5,True
+8,Delineador Waterproof,18.5,40,1,1,True
+9,Mascarilla Nocturna,22.0,30,2,2,True
+10,Espejo LED Aumento,42.0,12,3,5,True
