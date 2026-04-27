@@ -4,130 +4,106 @@ from app.models.models import Producto, Categoria, Proveedor
 
 DATA_PATH = "app/data"
 
-
 # =========================
 # 🔹 UTILIDADES CSV
 # =========================
 
 def leer_csv(nombre_archivo):
     ruta = os.path.join(DATA_PATH, nombre_archivo)
-
     if not os.path.exists(ruta):
         return []
-
     with open(ruta, mode="r", newline="", encoding="utf-8") as file:
         return list(csv.DictReader(file))
 
-
 def escribir_csv(nombre_archivo, datos, campos):
     ruta = os.path.join(DATA_PATH, nombre_archivo)
-
     with open(ruta, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=campos)
         writer.writeheader()
         writer.writerows(datos)
 
-
 # =========================
 # 🔹 PRODUCTOS
 # =========================
 
-def obtener_productos():
-    return leer_csv("productos.csv")
+CAMPOS_PRODUCTO = ["id", "nombre", "precio", "cantidad", "categoria_id", "proveedor_id", "activo"]
 
+def obtener_productos():
+    # Solo devolvemos los que están activos para la vista normal (opcional)
+    # o todos para que el profesor vea el histórico.
+    return leer_csv("productos.csv")
 
 def crear_producto(producto: Producto):
     productos = leer_csv("productos.csv")
-
-    productos.append(producto.dict())
-
-    campos = ["id", "nombre", "precio", "cantidad", "categoria_id", "proveedor_id"]
-    escribir_csv("productos.csv", productos, campos)
-
-    return producto
-
+    nuevo_prod = producto.dict()
+    # Si no tiene ID, le asignamos uno autoincremental
+    if nuevo_prod['id'] is None:
+        nuevo_prod['id'] = 1 if not productos else int(productos[-1]['id']) + 1
+    
+    productos.append(nuevo_prod)
+    escribir_csv("productos.csv", productos, CAMPOS_PRODUCTO)
+    return nuevo_prod
 
 def eliminar_producto(id_producto: int):
+    # PUNTO 5: Borrado Lógico (Histórico)
     productos = leer_csv("productos.csv")
-
-    productos = [p for p in productos if int(p["id"]) != id_producto]
-
-    campos = ["id", "nombre", "precio", "cantidad", "categoria_id", "proveedor_id"]
-    escribir_csv("productos.csv", productos, campos)
-
-    return {"mensaje": "Producto eliminado"}
-
-def actualizar_producto(id_producto: int, datos_actualizados: Producto):
-    productos = leer_csv("productos.csv")
-
-    actualizados = []
-
+    encontrado = False
     for p in productos:
         if int(p["id"]) == id_producto:
-            # reemplaza los datos del producto
-            p = datos_actualizados.dict()
-        actualizados.append(p)
+            p["activo"] = "False"  # Se mantiene en el CSV pero como inactivo
+            encontrado = True
+    
+    escribir_csv("productos.csv", productos, CAMPOS_PRODUCTO)
+    return {"mensaje": "Producto marcado como inactivo (histórico conservado)"} if encontrado else {"error": "No encontrado"}
 
-    campos = ["id", "nombre", "precio", "cantidad", "categoria_id", "proveedor_id"]
-    escribir_csv("productos.csv", actualizados, campos)
+# PUNTO 7: Búsqueda por atributo diferente al ID (Nombre)
+def buscar_producto_por_nombre(nombre: str):
+    productos = leer_csv("productos.csv")
+    return [p for p in productos if nombre.lower() in p["nombre"].lower()]
 
-    return {"mensaje": "Producto actualizado"}
+# PUNTO 6: Filtrar por atributo (Categoría)
+def filtrar_productos_por_categoria(id_cat: int):
+    productos = leer_csv("productos.csv")
+    return [p for p in productos if int(p["categoria_id"]) == id_cat]
 
 # =========================
 # 🔹 CATEGORÍAS
 # =========================
 
-def obtener_categorias():
-    return leer_csv("categorias.csv")
-
+CAMPOS_CATEGORIA = ["id", "nombre", "descripcion", "activo"]
 
 def crear_categoria(categoria: Categoria):
     categorias = leer_csv("categorias.csv")
-
-    categorias.append(categoria.dict())
-
-    campos = ["id", "nombre", "descripcion"]
-    escribir_csv("categorias.csv", categorias, campos)
-
-    return categoria
-
+    nueva_cat = categoria.dict()
+    categorias.append(nueva_cat)
+    escribir_csv("categorias.csv", categorias, CAMPOS_CATEGORIA)
+    return nueva_cat
 
 def eliminar_categoria(id_categoria: int):
     categorias = leer_csv("categorias.csv")
-
-    categorias = [c for c in categorias if int(c["id"]) != id_categoria]
-
-    campos = ["id", "nombre", "descripcion"]
-    escribir_csv("categorias.csv", categorias, campos)
-
-    return {"mensaje": "Categoria eliminada"}
-
+    for c in categorias:
+        if int(c["id"]) == id_categoria:
+            c["activo"] = "False"
+    escribir_csv("categorias.csv", categorias, CAMPOS_CATEGORIA)
+    return {"mensaje": "Categoría desactivada"}
 
 # =========================
 # 🔹 PROVEEDORES
 # =========================
 
-def obtener_proveedores():
-    return leer_csv("proveedores.csv")
-
+CAMPOS_PROVEEDOR = ["id", "nombre", "telefono", "email", "activo"]
 
 def crear_proveedor(proveedor: Proveedor):
     proveedores = leer_csv("proveedores.csv")
-
-    proveedores.append(proveedor.dict())
-
-    campos = ["id", "nombre", "telefono", "email"]
-    escribir_csv("proveedores.csv", proveedores, campos)
-
-    return proveedor
-
+    nuevo_prov = proveedor.dict()
+    proveedores.append(nuevo_prov)
+    escribir_csv("proveedores.csv", proveedores, CAMPOS_PROVEEDOR)
+    return nuevo_prov
 
 def eliminar_proveedor(id_proveedor: int):
     proveedores = leer_csv("proveedores.csv")
-
-    proveedores = [p for p in proveedores if int(p["id"]) != id_proveedor]
-
-    campos = ["id", "nombre", "telefono", "email"]
-    escribir_csv("proveedores.csv", proveedores, campos)
-
-    return {"mensaje": "Proveedor eliminado"}
+    for p in proveedores:
+        if int(p["id"]) == id_proveedor:
+            p["activo"] = "False"
+    escribir_csv("proveedores.csv", proveedores, CAMPOS_PROVEEDOR)
+    return {"mensaje": "Proveedor desactivado"}
