@@ -75,3 +75,7 @@ def add_proveedor(proveedor: Proveedor):
 @router.delete("/proveedores/{id_proveedor}")
 def delete_proveedor(id_proveedor: int):
     return eliminar_proveedor(id_proveedor)
+
+@router.put("/productos/{id_producto}")
+def update_producto(id_producto: int, producto: Producto):
+    return actualizar_producto(id_producto, producto)

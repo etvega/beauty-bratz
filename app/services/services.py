@@ -57,6 +57,21 @@ def eliminar_producto(id_producto: int):
 
     return {"mensaje": "Producto eliminado"}
 
+def actualizar_producto(id_producto: int, datos_actualizados: Producto):
+    productos = leer_csv("productos.csv")
+
+    actualizados = []
+
+    for p in productos:
+        if int(p["id"]) == id_producto:
+            # reemplaza los datos del producto
+            p = datos_actualizados.dict()
+        actualizados.append(p)
+
+    campos = ["id", "nombre", "precio", "cantidad", "categoria_id", "proveedor_id"]
+    escribir_csv("productos.csv", actualizados, campos)
+
+    return {"mensaje": "Producto actualizado"}
 
 # =========================
 # 🔹 CATEGORÍAS
