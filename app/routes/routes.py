@@ -1,81 +1,56 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.models.models import Producto, Categoria, Proveedor
-from app.services.services import (
-    # Productos
-    obtener_productos,
-    crear_producto,
-    eliminar_producto,
-
-    # Categorías
-    obtener_categorias,
-    crear_categoria,
-    eliminar_categoria,
-
-    # Proveedores
-    obtener_proveedores,
-    crear_proveedor,
-    eliminar_proveedor
-)
+from app.services import services  # Importamos el módulo completo para evitar errores
 
 router = APIRouter()
 
-
-# =========================
-# 🔹 PRODUCTOS
-# =========================
-
-@router.get("/productos")
+# --- PRODUCTOS ---
+@router.get("/productos", tags=["Productos"])
 def get_productos():
-    return obtener_productos()
+    return services.obtener_productos()
 
-
-@router.post("/productos")
+@router.post("/productos", tags=["Productos"])
 def add_producto(producto: Producto):
-    return crear_producto(producto)
+    return services.crear_producto(producto)
 
-
-@router.delete("/productos/{id_producto}")
-def delete_producto(id_producto: int):
-    return eliminar_producto(id_producto)
-
-
-# =========================
-# 🔹 CATEGORÍAS
-# =========================
-
-@router.get("/categorias")
-def get_categorias():
-    return obtener_categorias()
-
-
-@router.post("/categorias")
-def add_categoria(categoria: Categoria):
-    return crear_categoria(categoria)
-
-
-@router.delete("/categorias/{id_categoria}")
-def delete_categoria(id_categoria: int):
-    return eliminar_categoria(id_categoria)
-
-
-# =========================
-# 🔹 PROVEEDORES
-# =========================
-
-@router.get("/proveedores")
-def get_proveedores():
-    return obtener_proveedores()
-
-
-@router.post("/proveedores")
-def add_proveedor(proveedor: Proveedor):
-    return crear_proveedor(proveedor)
-
-
-@router.delete("/proveedores/{id_proveedor}")
-def delete_proveedor(id_proveedor: int):
-    return eliminar_proveedor(id_proveedor)
-
-@router.put("/productos/{id_producto}")
+@router.put("/productos/{id_producto}", tags=["Productos"])
 def update_producto(id_producto: int, producto: Producto):
-    return actualizar_producto(id_producto, producto)
+    return services.actualizar_producto(id_producto, producto)
+
+@router.delete("/productos/{id_producto}", tags=["Productos"])
+def delete_producto(id_producto: int):
+    return services.eliminar_producto(id_producto)
+
+@router.get("/productos/buscar/{nombre}", tags=["Productos"])
+def get_producto_por_nombre(nombre: str):
+    return services.buscar_producto_por_nombre(nombre)
+
+@router.get("/productos/filtrar/categoria/{id_categoria}", tags=["Productos"])
+def get_productos_por_categoria(id_categoria: int):
+    return services.filtrar_productos_por_categoria(id_categoria)
+
+# --- CATEGORÍAS ---
+@router.get("/categorias", tags=["Categorías"])
+def get_categorias():
+    return services.obtener_categorias()
+
+@router.post("/categorias", tags=["Categorías"])
+def add_categoria(categoria: Categoria):
+    return services.crear_categoria(categoria)
+
+@router.delete("/categorias/{id_categoria}", tags=["Categorías"])
+def delete_categoria(id_categoria: int):
+    return services.eliminar_categoria(id_categoria)
+
+# --- PROVEEDORES ---
+@router.get("/proveedores", tags=["Proveedores"])
+def get_proveedores():
+    return services.obtener_proveedores()
+
+@router.post("/proveedores", tags=["Proveedores"])
+def add_provider(proveedor: Proveedor):
+    return services.crear_proveedor(proveedor)
+
+@router.delete("/proveedores/{id_proveedor}", tags=["Proveedores"])
+def delete_provider(id_proveedor: int):
+    return services.eliminar_proveedor(id_proveedor)
