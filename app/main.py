@@ -5,15 +5,7 @@ from app.routes.routes import router
 app = FastAPI(
     title="BEAUTY BRATZ – Sistema de Inventario",
     description="""
-    ### 💅 API de Gestión de Inventario Profesional
-    
-    Este sistema permite administrar productos, categorías y proveedores con persistencia real.
-    
-    **Características principales:**
-    * ✅ **CRUD Completo:** Gestión de todas las entidades.
-    * ✅ **Persistencia:** Almacenamiento directo en archivos CSV (Sin SQL).
-    * ✅ **Sistema de Histórico:** Borrado lógico mediante estados (Punto 5 del proyecto).
-    * ✅ **Búsqueda y Filtros:** Endpoints específicos para localización de datos por atributos.
+    API de Gestión de Inventario 
     """,
     version="1.1.0"
 )

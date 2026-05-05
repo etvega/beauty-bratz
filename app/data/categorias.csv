@@ -4,3 +4,4 @@ id,nombre,descripcion,activo
 3,Accesorios,Brochas y herramientas,True
 4,Labios,Labiales,True
 5,Ojos,Sombras y delineadores,True
+6,perfumes,fragancias,False

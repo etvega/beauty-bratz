@@ -72,6 +72,10 @@ def filtrar_productos_por_categoria(id_cat: int):
 
 CAMPOS_CATEGORIA = ["id", "nombre", "descripcion", "activo"]
 
+def obtener_categorias():
+    categorias = leer_csv("categorias.csv")
+    return categorias
+
 def crear_categoria(categoria: Categoria):
     categorias = leer_csv("categorias.csv")
     nueva_cat = categoria.dict()
@@ -92,6 +96,10 @@ def eliminar_categoria(id_categoria: int):
 # =========================
 
 CAMPOS_PROVEEDOR = ["id", "nombre", "telefono", "email", "activo"]
+
+def obtener_proveedores():
+    proveedores = leer_csv("proveedores.csv")
+    return proveedores
 
 def crear_proveedor(proveedor: Proveedor):
     proveedores = leer_csv("proveedores.csv")

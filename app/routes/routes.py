@@ -35,7 +35,7 @@ def get_categorias():
     return services.obtener_categorias()
 
 @router.post("/categorias", tags=["Categorías"])
-def add_categoria(categoria: Categoria):
+def Agregar_categoria(categoria: Categoria):
     return services.crear_categoria(categoria)
 
 @router.delete("/categorias/{id_categoria}", tags=["Categorías"])
