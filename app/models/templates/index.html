@@ -1,22 +1,800 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Beauty Bratz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beauty Bratz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --pink-primary: #d4537e;
+      --pink-light: #fbeaf0;
+      --pink-dark: #993556;
+    }
+    body { background: #fdf6f9; font-family: 'Segoe UI', sans-serif; }
+
+    /* NAVBAR */
+    .navbar { background: var(--pink-primary) !important; }
+    .navbar-brand { font-weight: 700; font-size: 1.4rem; color: #fff !important; letter-spacing: 1px; }
+    .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 500; }
+    .nav-link:hover, .nav-link.active { color: #fff !important; }
+    .navbar .form-control { border-radius: 20px; border: none; font-size: 0.9rem; }
+    .navbar .btn-search { background: #fff; color: var(--pink-primary); border-radius: 20px; border: none; font-weight: 600; }
+
+    /* SECCIONES */
+    .section-card { background: #fff; border-radius: 16px; border: 0.5px solid #f4c0d1; padding: 2rem; margin-bottom: 2rem; }
+    .section-title { font-size: 1.2rem; font-weight: 600; color: var(--pink-dark); border-bottom: 2px solid var(--pink-light); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+
+    /* TARJETAS MÉTRICAS */
+    .metric-card { background: var(--pink-light); border-radius: 12px; padding: 1rem 1.25rem; text-align: center; }
+    .metric-label { font-size: 0.8rem; color: var(--pink-dark); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-value { font-size: 2rem; font-weight: 700; color: var(--pink-primary); }
+
+    /* BOTONES */
+    .btn-pink { background: var(--pink-primary); color: #fff; border: none; border-radius: 8px; }
+    .btn-pink:hover { background: var(--pink-dark); color: #fff; }
+    .btn-outline-pink { border: 1px solid var(--pink-primary); color: var(--pink-primary); border-radius: 8px; background: transparent; }
+    .btn-outline-pink:hover { background: var(--pink-primary); color: #fff; }
+
+    /* TABLAS */
+    .table thead th { background: var(--pink-light); color: var(--pink-dark); font-weight: 600; border: none; }
+    .table td, .table th { vertical-align: middle; }
+    .badge-activo { background: #d4edda; color: #155724; border-radius: 20px; padding: 3px 10px; font-size: 0.78rem; }
+    .badge-inactivo { background: #f8d7da; color: #721c24; border-radius: 20px; padding: 3px 10px; font-size: 0.78rem; }
+
+    /* FORMULARIOS */
+    .form-control:focus, .form-select:focus { border-color: var(--pink-primary); box-shadow: 0 0 0 3px rgba(212,83,126,0.15); }
+    .form-label { font-weight: 500; font-size: 0.9rem; color: #555; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--pink-primary), #f4c0d1); border-radius: 16px; padding: 2.5rem 2rem; color: #fff; margin-bottom: 2rem; }
+    .hero h1 { font-size: 2rem; font-weight: 700; }
+    .hero p { opacity: 0.9; font-size: 1rem; }
+
+    /* ALERTAS */
+    .alert-bb { background: var(--pink-light); border-left: 4px solid var(--pink-primary); color: var(--pink-dark); border-radius: 8px; }
+
+    /* MODAL */
+    .modal-header { background: var(--pink-primary); color: #fff; }
+    .modal-title { font-weight: 600; }
+    .btn-close-white { filter: invert(1); }
+
+    /* IMAGEN PREVIEW */
+    #imgPreview { max-height: 120px; border-radius: 8px; border: 1px solid #f4c0d1; margin-top: 8px; display: none; }
+
+    /* TABS */
+    .nav-tabs .nav-link { color: var(--pink-dark); border: none; font-weight: 500; }
+    .nav-tabs .nav-link.active { color: var(--pink-primary); border-bottom: 3px solid var(--pink-primary); background: transparent; }
+
+    /* FOOTER */
+    footer { background: var(--pink-dark); color: #f4c0d1; text-align: center; padding: 1rem; margin-top: 3rem; font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.4rem; }
+      .metric-value { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Beauty Bratz</h1>
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#">💄 Beauty Bratz</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="#productos">Productos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#categorias">Categorías</a></li>
+        <li class="nav-item"><a class="nav-link" href="#proveedores">Proveedores</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dashboard">Dashboard</a></li>
+      </ul>
+      <!-- BUSCADOR GLOBAL -->
+      <form class="d-flex gap-2" onsubmit="buscarGlobal(event)">
+        <input class="form-control" type="search" id="searchGlobal" placeholder="Buscar producto..." aria-label="Buscar">
+        <button class="btn btn-search" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</nav>
 
-    <p>Sistema de gestión de productos de belleza.</p>
+<!-- ===== CONTENIDO ===== -->
+<div class="container my-4">
 
-    <h2>Menú</h2>
+  <!-- HERO -->
+  <div class="hero" id="inicio">
+    <h1>🌸 Bienvenida a Beauty Bratz</h1>
+    <p>Gestiona tus productos de belleza, categorías y proveedores en un solo lugar.</p>
+    <button class="btn btn-light btn-pink mt-2" onclick="document.getElementById('productos').scrollIntoView()">
+      Ver productos →
+    </button>
+  </div>
 
-    <ul>
-        <li>Productos</li>
-        <li>Categorías</li>
-        <li>Proveedores</li>
-    </ul>
+  <!-- MÉTRICAS -->
+  <div class="row g-3 mb-4" id="metricas">
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">Productos</div>
+        <div class="metric-value" id="totalProductos">–</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">Categorías</div>
+        <div class="metric-value" id="totalCategorias">–</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">Proveedores</div>
+        <div class="metric-value" id="totalProveedores">–</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-label">Stock total</div>
+        <div class="metric-value" id="totalStock">–</div>
+      </div>
+    </div>
+  </div>
 
+  <!-- RESULTADO BÚSQUEDA -->
+  <div id="resultadoBusqueda" class="alert alert-bb mb-3" style="display:none;"></div>
+
+  <!-- ===== PRODUCTOS ===== -->
+  <div class="section-card" id="productos">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="section-title mb-0">🧴 Productos</div>
+      <button class="btn btn-pink btn-sm" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="abrirModalProducto()">
+        + Nuevo producto
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control form-control-sm" id="filtroNombre" placeholder="Filtrar por nombre..." oninput="filtrarProductos()">
+      </div>
+      <div class="col-md-3">
+        <select class="form-select form-select-sm" id="filtroCategoria" onchange="filtrarProductos()">
+          <option value="">Todas las categorías</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select form-select-sm" id="filtroEstado" onchange="filtrarProductos()">
+          <option value="">Todos</option>
+          <option value="True">Activos</option>
+          <option value="False">Inactivos</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover" id="tablaProductos">
+        <thead>
+          <tr>
+            <th>ID</th><th>Imagen</th><th>Nombre</th><th>Precio</th>
+            <th>Stock</th><th>Categoría</th><th>Proveedor</th><th>Estado</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="bodyProductos">
+          <tr><td colspan="9" class="text-center text-muted py-3">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== CATEGORÍAS ===== -->
+  <div class="section-card" id="categorias">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="section-title mb-0">🏷️ Categorías</div>
+      <button class="btn btn-pink btn-sm" data-bs-toggle="modal" data-bs-target="#modalCategoria" onclick="abrirModalCategoria()">
+        + Nueva categoría
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="bodyCategorias">
+          <tr><td colspan="5" class="text-center text-muted py-3">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== PROVEEDORES ===== -->
+  <div class="section-card" id="proveedores">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="section-title mb-0">🚚 Proveedores</div>
+      <button class="btn btn-pink btn-sm" data-bs-toggle="modal" data-bs-target="#modalProveedor" onclick="abrirModalProveedor()">
+        + Nuevo proveedor
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr><th>ID</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="bodyProveedores">
+          <tr><td colspan="6" class="text-center text-muted py-3">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="section-card" id="dashboard">
+    <div class="section-title">📊 Dashboard</div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <p class="fw-500 text-muted mb-2" style="font-size:0.9rem">Productos por categoría</p>
+        <canvas id="graficaCategorias" height="220"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="fw-500 text-muted mb-2" style="font-size:0.9rem">Top 5 productos por precio</p>
+        <canvas id="graficaPrecios" height="220"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="fw-500 text-muted mb-2" style="font-size:0.9rem">Stock por producto (top 6)</p>
+        <canvas id="graficaStock" height="220"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="fw-500 text-muted mb-2" style="font-size:0.9rem">Productos por proveedor</p>
+        <canvas id="graficaProveedores" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ===== MODAL PRODUCTO ===== -->
+<div class="modal fade" id="modalProducto" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModalProducto">Nuevo Producto</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="productoId">
+        <div class="mb-3">
+          <label class="form-label">Nombre *</label>
+          <input type="text" class="form-control" id="productoNombre" required minlength="2" maxlength="100">
+          <div class="invalid-feedback">El nombre es obligatorio (mínimo 2 caracteres).</div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label">Precio *</label>
+            <input type="number" class="form-control" id="productoPrecio" min="0" step="0.01" required>
+            <div class="invalid-feedback">Ingresa un precio válido.</div>
+          </div>
+          <div class="col-6">
+            <label class="form-label">Cantidad *</label>
+            <input type="number" class="form-control" id="productoCantidad" min="0" required>
+            <div class="invalid-feedback">Ingresa una cantidad válida.</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Categoría *</label>
+          <select class="form-select" id="productoCategoria" required>
+            <option value="">Selecciona una categoría</option>
+          </select>
+          <div class="invalid-feedback">Selecciona una categoría.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Proveedor *</label>
+          <select class="form-select" id="productoProveedor" required>
+            <option value="">Selecciona un proveedor</option>
+          </select>
+          <div class="invalid-feedback">Selecciona un proveedor.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Imagen del producto</label>
+          <input type="file" class="form-control" id="productoImagen" accept="image/*" onchange="previewImagen()">
+          <img id="imgPreview" src="" alt="Vista previa">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-pink" onclick="guardarProducto()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL CATEGORÍA ===== -->
+<div class="modal fade" id="modalCategoria" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModalCategoria">Nueva Categoría</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="categoriaId">
+        <div class="mb-3">
+          <label class="form-label">Nombre *</label>
+          <input type="text" class="form-control" id="categoriaNombre" required minlength="2">
+          <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-control" id="categoriaDescripcion" rows="2" maxlength="200"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-pink" onclick="guardarCategoria()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL PROVEEDOR ===== -->
+<div class="modal fade" id="modalProveedor" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModalProveedor">Nuevo Proveedor</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="proveedorId">
+        <div class="mb-3">
+          <label class="form-label">Nombre *</label>
+          <input type="text" class="form-control" id="proveedorNombre" required minlength="2">
+          <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Teléfono *</label>
+          <input type="tel" class="form-control" id="proveedorTelefono" required pattern="[0-9\+\-\s]{7,15}">
+          <div class="invalid-feedback">Ingresa un teléfono válido.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-control" id="proveedorEmail" required>
+          <div class="invalid-feedback">Ingresa un email válido.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-pink" onclick="guardarProveedor()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  💄 Beauty Bratz &copy; 2025 — Sistema de gestión de productos de belleza
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const API = "";  // Si FastAPI corre en otro puerto pon: "http://localhost:8000"
+
+let todosProductos = [];
+let todasCategorias = [];
+let todosProveedores = [];
+let graficas = {};
+
+// ===========================
+// CARGA INICIAL
+// ===========================
+async function cargarTodo() {
+  await Promise.all([cargarCategorias(), cargarProveedores()]);
+  await cargarProductos();
+  actualizarMetricas();
+  renderGraficas();
+}
+
+// ===========================
+// PRODUCTOS
+// ===========================
+async function cargarProductos() {
+  try {
+    const r = await fetch(`${API}/productos`);
+    todosProductos = await r.json();
+    renderProductos(todosProductos);
+  } catch(e) {
+    document.getElementById("bodyProductos").innerHTML =
+      `<tr><td colspan="9" class="text-center text-danger">Error al cargar productos. ¿Está corriendo el servidor?</td></tr>`;
+  }
+}
+
+function renderProductos(lista) {
+  const body = document.getElementById("bodyProductos");
+  if (!lista.length) {
+    body.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-3">No hay productos registrados.</td></tr>`;
+    return;
+  }
+  body.innerHTML = lista.map(p => {
+    const cat = todasCategorias.find(c => c.id == p.categoria_id)?.nombre || p.categoria_id;
+    const prov = todosProveedores.find(v => v.id == p.proveedor_id)?.nombre || p.proveedor_id;
+    const activo = String(p.activo) === "True" || p.activo === true;
+    const badgeEstado = activo
+      ? `<span class="badge-activo">Activo</span>`
+      : `<span class="badge-inactivo">Inactivo</span>`;
+    const imgTag = p.imagen
+      ? `<img src="${p.imagen}" alt="${p.nombre}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">`
+      : `<span style="color:#ccc;font-size:1.2rem;">🖼️</span>`;
+    return `<tr>
+      <td>${p.id}</td>
+      <td>${imgTag}</td>
+      <td>${p.nombre}</td>
+      <td>$${Number(p.precio).toLocaleString('es-CO')}</td>
+      <td>${p.cantidad}</td>
+      <td>${cat}</td>
+      <td>${prov}</td>
+      <td>${badgeEstado}</td>
+      <td>
+        <button class="btn btn-outline-pink btn-sm me-1" onclick='editarProducto(${JSON.stringify(p)})'>✏️</button>
+        <button class="btn btn-outline-danger btn-sm" onclick="eliminarProducto(${p.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function filtrarProductos() {
+  const nombre = document.getElementById("filtroNombre").value.toLowerCase();
+  const catId = document.getElementById("filtroCategoria").value;
+  const estado = document.getElementById("filtroEstado").value;
+
+  const filtrados = todosProductos.filter(p => {
+    const matchNombre = p.nombre.toLowerCase().includes(nombre);
+    const matchCat = catId ? String(p.categoria_id) === catId : true;
+    const matchEstado = estado ? String(p.activo) === estado : true;
+    return matchNombre && matchCat && matchEstado;
+  });
+  renderProductos(filtrados);
+}
+
+function buscarGlobal(e) {
+  e.preventDefault();
+  const q = document.getElementById("searchGlobal").value.trim();
+  if (!q) return;
+  const resultados = todosProductos.filter(p => p.nombre.toLowerCase().includes(q.toLowerCase()));
+  const div = document.getElementById("resultadoBusqueda");
+  div.style.display = "block";
+  div.innerHTML = resultados.length
+    ? `🔍 Se encontraron <strong>${resultados.length}</strong> producto(s) para "<em>${q}</em>": ${resultados.map(p=>p.nombre).join(", ")}`
+    : `🔍 No se encontraron productos para "<em>${q}</em>"`;
+  document.getElementById("productos").scrollIntoView({ behavior: "smooth" });
+  renderProductos(resultados);
+}
+
+function abrirModalProducto() {
+  document.getElementById("tituloModalProducto").textContent = "Nuevo Producto";
+  document.getElementById("productoId").value = "";
+  document.getElementById("productoNombre").value = "";
+  document.getElementById("productoPrecio").value = "";
+  document.getElementById("productoCantidad").value = "";
+  document.getElementById("productoCategoria").value = "";
+  document.getElementById("productoProveedor").value = "";
+  document.getElementById("imgPreview").style.display = "none";
+  limpiarValidacion("modalProducto");
+}
+
+function editarProducto(p) {
+  document.getElementById("tituloModalProducto").textContent = "Editar Producto";
+  document.getElementById("productoId").value = p.id;
+  document.getElementById("productoNombre").value = p.nombre;
+  document.getElementById("productoPrecio").value = p.precio;
+  document.getElementById("productoCantidad").value = p.cantidad;
+  document.getElementById("productoCategoria").value = p.categoria_id;
+  document.getElementById("productoProveedor").value = p.proveedor_id;
+  new bootstrap.Modal(document.getElementById("modalProducto")).show();
+}
+
+async function guardarProducto() {
+  if (!validarFormulario("modalProducto", ["productoNombre","productoPrecio","productoCantidad","productoCategoria","productoProveedor"])) return;
+
+  const id = document.getElementById("productoId").value;
+  const data = {
+    nombre: document.getElementById("productoNombre").value.trim(),
+    precio: parseFloat(document.getElementById("productoPrecio").value),
+    cantidad: parseInt(document.getElementById("productoCantidad").value),
+    categoria_id: parseInt(document.getElementById("productoCategoria").value),
+    proveedor_id: parseInt(document.getElementById("productoProveedor").value),
+    activo: true
+  };
+
+  const url = id ? `${API}/productos/${id}` : `${API}/productos`;
+  const method = id ? "PUT" : "POST";
+
+  await fetch(url, { method, headers: {"Content-Type":"application/json"}, body: JSON.stringify(data) });
+  bootstrap.Modal.getInstance(document.getElementById("modalProducto")).hide();
+  await cargarProductos();
+  actualizarMetricas();
+  renderGraficas();
+}
+
+async function eliminarProducto(id) {
+  if (!confirm("¿Deseas desactivar este producto?")) return;
+  await fetch(`${API}/productos/${id}`, { method: "DELETE" });
+  await cargarProductos();
+  actualizarMetricas();
+}
+
+function previewImagen() {
+  const file = document.getElementById("productoImagen").files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById("imgPreview");
+    img.src = e.target.result;
+    img.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===========================
+// CATEGORÍAS
+// ===========================
+async function cargarCategorias() {
+  try {
+    const r = await fetch(`${API}/categorias`);
+    todasCategorias = await r.json();
+    renderCategorias();
+    llenarSelectCategorias();
+  } catch(e) {}
+}
+
+function renderCategorias() {
+  const body = document.getElementById("bodyCategorias");
+  if (!todasCategorias.length) {
+    body.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Sin categorías.</td></tr>`;
+    return;
+  }
+  body.innerHTML = todasCategorias.map(c => {
+    const activo = String(c.activo) === "True" || c.activo === true;
+    return `<tr>
+      <td>${c.id}</td>
+      <td>${c.nombre}</td>
+      <td>${c.descripcion || "—"}</td>
+      <td>${activo ? '<span class="badge-activo">Activo</span>' : '<span class="badge-inactivo">Inactivo</span>'}</td>
+      <td>
+        <button class="btn btn-outline-pink btn-sm me-1" onclick='editarCategoria(${JSON.stringify(c)})'>✏️</button>
+        <button class="btn btn-outline-danger btn-sm" onclick="eliminarCategoria(${c.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function llenarSelectCategorias() {
+  const selModal = document.getElementById("productoCategoria");
+  const selFiltro = document.getElementById("filtroCategoria");
+  const opts = todasCategorias.filter(c => String(c.activo) === "True" || c.activo === true)
+    .map(c => `<option value="${c.id}">${c.nombre}</option>`).join("");
+  selModal.innerHTML = `<option value="">Selecciona una categoría</option>${opts}`;
+  selFiltro.innerHTML = `<option value="">Todas las categorías</option>${opts}`;
+}
+
+function abrirModalCategoria() {
+  document.getElementById("tituloModalCategoria").textContent = "Nueva Categoría";
+  document.getElementById("categoriaId").value = "";
+  document.getElementById("categoriaNombre").value = "";
+  document.getElementById("categoriaDescripcion").value = "";
+  limpiarValidacion("modalCategoria");
+}
+
+function editarCategoria(c) {
+  document.getElementById("tituloModalCategoria").textContent = "Editar Categoría";
+  document.getElementById("categoriaId").value = c.id;
+  document.getElementById("categoriaNombre").value = c.nombre;
+  document.getElementById("categoriaDescripcion").value = c.descripcion || "";
+  new bootstrap.Modal(document.getElementById("modalCategoria")).show();
+}
+
+async function guardarCategoria() {
+  if (!validarFormulario("modalCategoria", ["categoriaNombre"])) return;
+  const id = document.getElementById("categoriaId").value;
+  const data = {
+    nombre: document.getElementById("categoriaNombre").value.trim(),
+    descripcion: document.getElementById("categoriaDescripcion").value.trim(),
+    activo: true
+  };
+  const url = id ? `${API}/categorias/${id}` : `${API}/categorias`;
+  const method = id ? "PUT" : "POST";
+  await fetch(url, { method, headers: {"Content-Type":"application/json"}, body: JSON.stringify(data) });
+  bootstrap.Modal.getInstance(document.getElementById("modalCategoria")).hide();
+  await cargarCategorias();
+  renderGraficas();
+}
+
+async function eliminarCategoria(id) {
+  if (!confirm("¿Deseas desactivar esta categoría?")) return;
+  await fetch(`${API}/categorias/${id}`, { method: "DELETE" });
+  await cargarCategorias();
+}
+
+// ===========================
+// PROVEEDORES
+// ===========================
+async function cargarProveedores() {
+  try {
+    const r = await fetch(`${API}/proveedores`);
+    todosProveedores = await r.json();
+    renderProveedores();
+    llenarSelectProveedores();
+  } catch(e) {}
+}
+
+function renderProveedores() {
+  const body = document.getElementById("bodyProveedores");
+  if (!todosProveedores.length) {
+    body.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Sin proveedores.</td></tr>`;
+    return;
+  }
+  body.innerHTML = todosProveedores.map(p => {
+    const activo = String(p.activo) === "True" || p.activo === true;
+    return `<tr>
+      <td>${p.id}</td>
+      <td>${p.nombre}</td>
+      <td>${p.telefono}</td>
+      <td>${p.email}</td>
+      <td>${activo ? '<span class="badge-activo">Activo</span>' : '<span class="badge-inactivo">Inactivo</span>'}</td>
+      <td>
+        <button class="btn btn-outline-pink btn-sm me-1" onclick='editarProveedor(${JSON.stringify(p)})'>✏️</button>
+        <button class="btn btn-outline-danger btn-sm" onclick="eliminarProveedor(${p.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function llenarSelectProveedores() {
+  const sel = document.getElementById("productoProveedor");
+  const opts = todosProveedores.filter(p => String(p.activo) === "True" || p.activo === true)
+    .map(p => `<option value="${p.id}">${p.nombre}</option>`).join("");
+  sel.innerHTML = `<option value="">Selecciona un proveedor</option>${opts}`;
+}
+
+function abrirModalProveedor() {
+  document.getElementById("tituloModalProveedor").textContent = "Nuevo Proveedor";
+  document.getElementById("proveedorId").value = "";
+  document.getElementById("proveedorNombre").value = "";
+  document.getElementById("proveedorTelefono").value = "";
+  document.getElementById("proveedorEmail").value = "";
+  limpiarValidacion("modalProveedor");
+}
+
+function editarProveedor(p) {
+  document.getElementById("tituloModalProveedor").textContent = "Editar Proveedor";
+  document.getElementById("proveedorId").value = p.id;
+  document.getElementById("proveedorNombre").value = p.nombre;
+  document.getElementById("proveedorTelefono").value = p.telefono;
+  document.getElementById("proveedorEmail").value = p.email;
+  new bootstrap.Modal(document.getElementById("modalProveedor")).show();
+}
+
+async function guardarProveedor() {
+  if (!validarFormulario("modalProveedor", ["proveedorNombre","proveedorTelefono","proveedorEmail"])) return;
+  const id = document.getElementById("proveedorId").value;
+  const data = {
+    nombre: document.getElementById("proveedorNombre").value.trim(),
+    telefono: document.getElementById("proveedorTelefono").value.trim(),
+    email: document.getElementById("proveedorEmail").value.trim(),
+    activo: true
+  };
+  const url = id ? `${API}/proveedores/${id}` : `${API}/proveedores`;
+  const method = id ? "PUT" : "POST";
+  await fetch(url, { method, headers: {"Content-Type":"application/json"}, body: JSON.stringify(data) });
+  bootstrap.Modal.getInstance(document.getElementById("modalProveedor")).hide();
+  await cargarProveedores();
+  renderGraficas();
+}
+
+async function eliminarProveedor(id) {
+  if (!confirm("¿Deseas desactivar este proveedor?")) return;
+  await fetch(`${API}/proveedores/${id}`, { method: "DELETE" });
+  await cargarProveedores();
+}
+
+// ===========================
+// MÉTRICAS
+// ===========================
+function actualizarMetricas() {
+  const activos = todosProductos.filter(p => String(p.activo) === "True" || p.activo === true);
+  document.getElementById("totalProductos").textContent = activos.length;
+  document.getElementById("totalCategorias").textContent = todasCategorias.length;
+  document.getElementById("totalProveedores").textContent = todosProveedores.length;
+  const stock = activos.reduce((s, p) => s + parseInt(p.cantidad || 0), 0);
+  document.getElementById("totalStock").textContent = stock.toLocaleString('es-CO');
+}
+
+// ===========================
+// GRÁFICAS
+// ===========================
+function renderGraficas() {
+  const activos = todosProductos.filter(p => String(p.activo) === "True" || p.activo === true);
+  const PINK = ["#d4537e","#f4c0d1","#993556","#fbeaf0","#72243e","#ed93b1"];
+
+  // 1. Por categoría (dona)
+  const contCat = {};
+  activos.forEach(p => {
+    const cat = todasCategorias.find(c => c.id == p.categoria_id)?.nombre || `Cat ${p.categoria_id}`;
+    contCat[cat] = (contCat[cat] || 0) + 1;
+  });
+  renderChart("graficaCategorias", "doughnut", Object.keys(contCat), Object.values(contCat), PINK, "");
+
+  // 2. Top 5 precios (barras)
+  const top5 = [...activos].sort((a,b) => b.precio - a.precio).slice(0,5);
+  renderChart("graficaPrecios", "bar", top5.map(p=>p.nombre), top5.map(p=>Number(p.precio)), PINK, "Precio ($)");
+
+  // 3. Stock top 6 (barras horizontales)
+  const top6stock = [...activos].sort((a,b) => b.cantidad - a.cantidad).slice(0,6);
+  renderChart("graficaStock", "bar", top6stock.map(p=>p.nombre), top6stock.map(p=>parseInt(p.cantidad)), PINK, "Unidades", true);
+
+  // 4. Por proveedor (dona)
+  const contProv = {};
+  activos.forEach(p => {
+    const prov = todosProveedores.find(v => v.id == p.proveedor_id)?.nombre || `Prov ${p.proveedor_id}`;
+    contProv[prov] = (contProv[prov] || 0) + 1;
+  });
+  renderChart("graficaProveedores", "doughnut", Object.keys(contProv), Object.values(contProv), PINK, "");
+}
+
+function renderChart(id, tipo, labels, data, colores, ylabel, horizontal=false) {
+  if (graficas[id]) graficas[id].destroy();
+  const ctx = document.getElementById(id).getContext("2d");
+  const esDona = tipo === "doughnut";
+  graficas[id] = new Chart(ctx, {
+    type: tipo,
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colores,
+        borderColor: esDona ? "#fff" : colores,
+        borderWidth: esDona ? 2 : 0,
+        borderRadius: esDona ? 0 : 6
+      }]
+    },
+    options: {
+      indexAxis: horizontal ? "y" : "x",
+      responsive: true,
+      plugins: {
+        legend: { display: esDona, position: "bottom", labels: { font: { size: 11 } } }
+      },
+      scales: esDona ? {} : {
+        y: { beginAtZero: true, ticks: { font: { size: 11 } } },
+        x: { ticks: { font: { size: 11 }, maxRotation: 30 } }
+      }
+    }
+  });
+}
+
+// ===========================
+// VALIDACIÓN
+// ===========================
+function validarFormulario(modalId, campos) {
+  let valido = true;
+  campos.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.checkValidity()) {
+      el.classList.add("is-invalid");
+      valido = false;
+    } else {
+      el.classList.remove("is-invalid");
+      el.classList.add("is-valid");
+    }
+  });
+  return valido;
+}
+
+function limpiarValidacion(modalId) {
+  document.querySelectorAll(`#${modalId} .is-invalid, #${modalId} .is-valid`).forEach(el => {
+    el.classList.remove("is-invalid","is-valid");
+  });
+}
+
+// ARRANQUE
+document.addEventListener("DOMContentLoaded", cargarTodo);
+</script>
 </body>
 </html>

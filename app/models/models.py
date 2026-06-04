@@ -6,7 +6,7 @@ class Categoria(BaseModel):
     id: Optional[int] = None
     nombre: str
     descripcion: Optional[str] = None
-    activo: bool = True  # <--- REQUISITO PUNTO 5: Para el histórico
+    activo: bool = True  
 
 # 🔹 MODELO: Proveedor
 class Proveedor(BaseModel):
@@ -14,7 +14,7 @@ class Proveedor(BaseModel):
     nombre: str
     telefono: str
     email: str
-    activo: bool = True  # <--- REQUISITO PUNTO 5: Para el histórico
+    activo: bool = True 
 
 # 🔹 MODELO: Producto
 class Producto(BaseModel):
@@ -24,4 +24,4 @@ class Producto(BaseModel):
     cantidad: int
     categoria_id: int
     proveedor_id: int
-    activo: bool = True  # <--- REQUISITO PUNTO 5: Para el histórico
+    activo: bool = True  
