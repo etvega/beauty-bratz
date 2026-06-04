@@ -3,10 +3,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.routes import router
 from app.database import engine
-from app.db_models import Base
+
+# Importar TODOS los modelos para que SQLAlchemy los registre
+from app.db_models import Base, CategoriaDB, ProveedorDB, ProductoDB
+
 import os
 
-# Crear tablas solo si existe conexión a la BD
+# Crear tablas solo si existe conexión a PostgreSQL
 if engine:
     Base.metadata.create_all(bind=engine)
 
@@ -43,9 +46,7 @@ def inicio(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(
-        os.environ.get("PORT", 8000)
-    )
+    port = int(os.environ.get("PORT", 8000))
 
     uvicorn.run(
         app,
