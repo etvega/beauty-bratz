@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
 
 
 class CategoriaDB(Base):
-    _tablename_ = "categorias"
+    __tablename__ = "categorias"
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, nullable=False)
@@ -18,7 +18,7 @@ class CategoriaDB(Base):
 
 
 class ProveedorDB(Base):
-    _tablename_ = "proveedores"
+    __tablename__ = "proveedores"
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, nullable=False)
@@ -30,7 +30,7 @@ class ProveedorDB(Base):
 
 
 class ProductoDB(Base):
-    _tablename_ = "productos"
+    __tablename__ = "productos"
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, nullable=False)
