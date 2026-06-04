@@ -6,8 +6,9 @@ from app.database import engine
 from app.db_models import Base
 import os
 
-# Crear tablas en PostgreSQL
-Base.metadata.create_all(bind=engine)
+# Crear tablas solo si existe conexión a la BD
+if engine:
+    Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Beauty Bratz",
