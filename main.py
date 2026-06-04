@@ -20,3 +20,8 @@ templates = Jinja2Templates(directory="app/models/templates")
 @app.get("/")
 def inicio(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
